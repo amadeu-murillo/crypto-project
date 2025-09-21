@@ -1,0 +1,169 @@
+.mintCard {
+  padding: 2rem;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+  max-width: 42rem;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--primary-glow-color);
+}
+
+.subtitle {
+  text-align: center;
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+}
+
+.progressContainer {
+  margin-bottom: 1.5rem;
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressLabels span {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.progressBarBg {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 9999px;
+  height: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--border-color);
+  padding: 2px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  background: linear-gradient(
+    90deg,
+    var(--secondary-glow-color),
+    var(--primary-glow-color)
+  );
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s ease-out;
+}
+
+.controlsFieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: opacity 0.3s;
+}
+
+.controlsFieldset:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.amountControl label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db;
+  margin-bottom: 0.5rem;
+}
+
+.amountInputWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.inputNumberBtn {
+  background-color: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--primary-glow-color);
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding: 0 1.25rem;
+  height: 3.5rem;
+}
+.inputNumberBtn:hover:not(:disabled) {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+.inputNumberBtn:first-child {
+  border-radius: 0.5rem 0 0 0.5rem;
+  border-right: none;
+}
+.inputNumberBtn:last-child {
+  border-radius: 0 0.5rem 0.5rem 0;
+  border-left: none;
+}
+
+.tokenInput {
+  width: 100%;
+  text-align: center;
+  background-color: rgba(10, 10, 20, 0.9);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  height: 3.5rem;
+  color: white;
+  font-size: 1.5rem;
+}
+.tokenInput:focus {
+  outline: 2px solid var(--primary-glow-color);
+  outline-offset: 2px;
+  z-index: 10;
+}
+
+.costDetails {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.costDetailsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.costDivider {
+  border-color: var(--border-color);
+  margin: 0.75rem 0;
+  opacity: 0.5;
+}
+.costDetailsRow span:first-child {
+  color: #9ca3af;
+}
+
+.totalCost {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-glow-color);
+}
+
+.mintButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.walletStatus {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 1rem;
+}

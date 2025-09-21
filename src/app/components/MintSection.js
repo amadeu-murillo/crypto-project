@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { TOKEN_PRICE_USD } from '@/lib/constants';
-
+import './MintSection.module.css'
 const MintSection = ({ solPrice, onMint, userWallet, isMinting, mintData, totalSupply }) => {
     const [tokenAmount, setTokenAmount] = useState(1000);
     const [totalCost, setTotalCost] = useState('0.00');
