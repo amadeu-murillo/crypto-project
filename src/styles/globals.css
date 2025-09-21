@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --bg-dark: #0A0A14;
+    --primary-glow: #FFD700; /* Electric Gold */
+    --secondary-glow: #9333EA; /* Cyber Purple */
+    --border-color: rgba(255, 215, 0, 0.2);
+}
+
+html { 
+    scroll-behavior: smooth; 
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-dark);
+    color: #E0E0E0;
+    overflow-x: hidden;
+}
+
+.font-heading { 
+    font-family: 'Chakra Petch', sans-serif; 
+}
+
+.glass-card {
+    background: rgba(10, 10, 20, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover { 
+    border-color: rgba(255, 215, 0, 0.5); 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.fancy-btn {
+    position: relative; 
+    overflow: hidden;
+    background: linear-gradient(90deg, var(--primary-glow), #F59E0B);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), inset 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.fancy-btn:hover {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.glow-text { text-shadow: 0 0 10px var(--primary-glow); }
+.glow-text-secondary { text-shadow: 0 0 10px var(--secondary-glow); }
+
+.timeline-line { border-color: var(--border-color); }
+
+.timeline-item::before {
+    content: ''; 
+    position: absolute; 
+    width: 18px; 
+    height: 18px;
+    border-radius: 50%; 
+    background-color: var(--bg-dark);
+    border: 4px solid var(--primary-glow); 
+    top: 5px; 
+    left: -34px; 
+    z-index: 1;
+    box-shadow: 0 0 12px var(--primary-glow);
+    animation: pulse-glow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse-glow { 
+    0%, 100% { box-shadow: 0 0 12px var(--primary-glow); } 
+    50% { box-shadow: 0 0 24px var(--primary-glow); } 
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, var(--secondary-glow), var(--primary-glow));
+    transition: width 0.5s ease-out;
+}
