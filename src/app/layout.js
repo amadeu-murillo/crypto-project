@@ -1,17 +1,18 @@
 import { Chakra_Petch, Poppins } from 'next/font/google';
-import '../styles/globals.css';
+// Atualizado para importar o CSS do local correto
+import './globals.css';
 
-// Optimized font loading with Next.js
+// Carregamento otimizado de fontes com Next.js
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '600'],
-  variable: '--font-poppins',
+  variable: '--font-poppins', // Cria uma variável CSS
 });
 
 const chakraPetch = Chakra_Petch({
   subsets: ['latin'],
   weight: ['700'],
-  variable: '--font-chakra-petch',
+  variable: '--font-chakra-petch', // Cria uma variável CSS
 });
 
 export const metadata = {
@@ -21,7 +22,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR" className={`${poppins.variable} ${chakraPetch.variable}`}>
+    // Aplica as variáveis das fontes na tag <html>
+    <html lang="pt-BR" className={`${poppins.variable} ${chakraPetch.variable} font-sans`}>
       <body>
         {children}
       </body>

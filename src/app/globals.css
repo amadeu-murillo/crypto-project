@@ -1,26 +1,66 @@
-@import "tailwindcss";
+/* Diretivas do Tailwind - devem estar no topo */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Definição das variáveis CSS globais */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --bg-dark: #0A0A14;
+    --primary-glow: #FFD700; /* Electric Gold */
+    --secondary-glow: #9333EA; /* Cyber Purple */
+    --border-color: rgba(255, 215, 0, 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html { 
+    scroll-behavior: smooth; 
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--bg-dark);
+    color: #E0E0E0;
+    overflow-x: hidden;
+    /* As fontes agora são aplicadas via tailwind.config.js e layout.js */
+}
+
+/* Componentes customizados que usam @apply para herdar estilos do Tailwind */
+@layer components {
+    .glass-card {
+        @apply bg-bg-dark/70 backdrop-blur-lg border border-border-color transition-all duration-300;
+    }
+    .glass-card:hover {
+        @apply border-primary-glow/50 shadow-lg shadow-primary-glow/10;
+    }
+
+    .fancy-btn {
+        @apply relative overflow-hidden bg-gradient-to-r from-primary-glow to-amber-500 text-gray-900 font-bold shadow-[0_0_15px_rgba(255,215,0,0.4)] transition-all duration-300;
+    }
+    .fancy-btn:hover {
+        @apply shadow-[0_0_30px_rgba(255,215,0,0.7)] -translate-y-0.5 scale-[1.02];
+    }
+    .fancy-btn:disabled {
+        @apply bg-gray-600 text-gray-400 cursor-not-allowed shadow-none scale-100 -translate-y-0;
+    }
+
+    .glow-text {
+        text-shadow: 0 0 10px var(--primary-glow);
+    }
+    .glow-text-secondary {
+        text-shadow: 0 0 10px var(--secondary-glow);
+    }
+
+    .timeline-line {
+        @apply border-border-color;
+    }
+    .timeline-item::before {
+        content: '';
+        @apply absolute w-[18px] h-[18px] rounded-full bg-bg-dark border-4 border-primary-glow top-[5px] -left-[34px] z-10 animate-pulse-glow;
+    }
+
+    .progress-bar-fill {
+        @apply bg-gradient-to-r from-secondary-glow to-primary-glow transition-all duration-500 ease-out;
+    }
+
+    .input-number-btn {
+        @apply bg-primary-glow/20 transition-colors hover:bg-primary-glow/40;
+    }
 }

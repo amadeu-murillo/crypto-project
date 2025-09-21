@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import * as solanaWeb3 from '@solana/web3.js';
-import { DEV_WALLET_ADDRESS, RPC_ENDPOINT } from '@/lib/constants';
+import { DEV_WALLET_ADDRESS, RPC_ENDPOINT, TOTAL_SUPPLY } from '@/lib/constants';
 
-// Import all section components
+// Importação dos componentes da UI
 import Navbar from './Navbar';
 import Hero from './Hero';
 import LiveStats from './LiveStats';
@@ -14,22 +14,36 @@ import Footer from './Footer';
 import Modal from './Modal';
 import ParticleCanvas from './ParticleCanvas';
 
+// Mock data para simular um estado real
+const MOCKED_MINT_DATA = {
+  tokensMinted: 1483291,
+  participants: 852,
+};
+
 const ClientWrapper = () => {
   const [solPrice, setSolPrice] = useState(null);
   const [userWallet, setUserWallet] = useState(null);
-  const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', status: '', txSignature: null });
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintData, setMintData] = useState(MOCKED_MINT_DATA);
+  const [modalState, setModalState] = useState({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    status: '', // 'loading', 'success', 'error'
+    txSignature: null 
+  });
 
-  // Fetch SOL price from our API route
+  // Busca o preço do SOL da nossa API route interna
   useEffect(() => {
     const getSolPrice = async () => {
       try {
         const response = await fetch('/api/sol-price');
-        if (!response.ok) throw new Error('Failed to fetch price');
+        if (!response.ok) throw new Error('Falha ao buscar preço do SOL');
         const data = await response.json();
         setSolPrice(data.solPrice);
       } catch (error) {
-        console.error('Error fetching SOL price:', error);
-        setSolPrice(null);
+        console.error('Erro ao buscar preço do SOL:', error);
+        setSolPrice(null); // Define como null em caso de erro
       }
     };
     getSolPrice();
@@ -47,21 +61,23 @@ const ClientWrapper = () => {
         const resp = await window.solana.connect();
         setUserWallet(resp.publicKey.toString());
       } catch (err) {
-        console.error('Failed to connect wallet:', err);
-        showModal('Erro', 'Falha ao conectar a carteira.', 'error');
+        console.error('Falha ao conectar carteira:', err);
+        showModal('Erro de Conexão', 'Não foi possível conectar à carteira Phantom. Por favor, tente novamente.', 'error');
       }
     } else {
+      // Abre a página da Phantom se a carteira não estiver instalada
       window.open('https://phantom.app/', '_blank');
     }
   };
 
   const handleMint = async (tokenAmount, totalCostSOL) => {
     if (!userWallet || !solPrice) {
-      showModal('Erro', 'Por favor, conecte a carteira e aguarde o preço do SOL.', 'error');
+      showModal('Ação Necessária', 'Por favor, conecte a sua carteira e aguarde o preço do SOL carregar.', 'error');
       return;
     }
     
-    showModal('A processar o Pagamento', 'Aprove a transação na sua carteira Phantom.', 'loading');
+    setIsMinting(true);
+    showModal('Processando Pagamento', 'Por favor, aprove a transação na sua carteira Phantom.', 'loading');
 
     try {
       const connection = new solanaWeb3.Connection(RPC_ENDPOINT);
@@ -83,10 +99,23 @@ const ClientWrapper = () => {
       const { signature } = await window.solana.signAndSendTransaction(transaction);
       await connection.confirmTransaction(signature, 'confirmed');
       
-      showModal('Pagamento Confirmado!', 'A sua transação foi bem-sucedida.', 'success', signature);
+      showModal('Pagamento Confirmado!', 'A sua transação foi bem-sucedida. Os seus tokens serão enviados em breve.', 'success', signature);
+      
+      // Simula a atualização dos dados após o mint
+      setMintData(prev => ({
+          ...prev,
+          tokensMinted: prev.tokensMinted + tokenAmount
+      }));
+
     } catch (error) {
-      console.error('Transaction error:', error);
-      showModal('Erro na Transação', 'A transação falhou. Por favor, tente novamente.', 'error');
+      console.error('Erro na transação:', error);
+      const userRejected = error.code === 4001;
+      const message = userRejected 
+        ? 'A transação foi rejeitada por você.'
+        : 'A transação falhou. Por favor, verifique seu saldo e tente novamente.';
+      showModal('Erro na Transação', message, 'error');
+    } finally {
+      setIsMinting(false); // Libera o botão
     }
   };
 
@@ -94,15 +123,25 @@ const ClientWrapper = () => {
     <>
       <ParticleCanvas />
       <Modal modalState={modalState} closeModal={closeModal} />
-      <Navbar onConnectWallet={connectWallet} userWallet={userWallet} />
-      <main className="container mx-auto p-4 md:p-8">
-        <Hero />
-        <LiveStats />
-        <MintSection solPrice={solPrice} onMint={handleMint} userWallet={userWallet} />
-        <WhyUs />
-        <Roadmap />
-      </main>
-      <Footer />
+      
+      <div className='relative z-10'>
+        <Navbar onConnectWallet={connectWallet} userWallet={userWallet} />
+        <main className="container mx-auto px-4 md:px-8">
+          <Hero />
+          <LiveStats mintData={mintData} />
+          <MintSection 
+            solPrice={solPrice} 
+            onMint={handleMint} 
+            userWallet={userWallet}
+            isMinting={isMinting}
+            mintData={mintData}
+            totalSupply={TOTAL_SUPPLY}
+          />
+          <WhyUs />
+          <Roadmap />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };
