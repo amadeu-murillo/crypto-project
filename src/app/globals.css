@@ -1,3 +1,55 @@
+/* Definição das variáveis CSS globais */
+:root {
+  --bg-dark: #0A0A14;
+  --primary-glow: #FFD700; /* Electric Gold */
+  --secondary-glow: #9333EA; /* Cyber Purple */
+  --border-color: rgba(255, 215, 0, 0.2);
+  
+  /* As variáveis de fonte são injetadas pelo Next.js no :root */
+}
+
+/* Reset básico e aplicação das fontes */
+html { 
+  scroll-behavior: smooth; 
+  font-family: var(--font-poppins), sans-serif; /* Aplica a fonte principal */
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #E0E0E0;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: inherit; /* Garante que a fonte do html seja herdada */
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-chakra-petch), sans-serif; /* Aplica a fonte de título */
+}
+
+
+button, input {
+  font-family: inherit;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* Estilos Gerais de Container e Seções */
 .container {
   width: 100%;
@@ -5,13 +57,6 @@
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
 }
 
 .main-content {
@@ -28,7 +73,7 @@
   padding: 1rem;
   position: sticky;
   top: 1rem;
-  margin: 0 1rem;
+  margin: 0 auto;
   max-width: 72rem;
   z-index: 40;
   border-radius: 0.75rem;
@@ -41,17 +86,16 @@
 }
 
 .navbar-title {
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
   color: var(--primary-glow);
-  font-family: 'Chakra Petch', sans-serif;
 }
 
 .navbar-button {
   padding: 0.5rem 1.5rem;
   border-radius: 0.5rem;
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem;
 }
 
 /* Componentes Genéricos */
@@ -98,20 +142,19 @@
   margin-bottom: 6rem;
 }
 .hero-title {
-  font-size: 3rem; /* text-5xl */
+  font-size: 3rem;
   line-height: 1.1;
   font-weight: 700;
   color: white;
-  font-family: 'Chakra Petch', sans-serif;
 }
 .hero-title-highlight {
   color: var(--primary-glow);
 }
 .hero-subtitle {
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
   color: #9CA3AF;
   margin-top: 1.5rem;
-  max-width: 48rem; /* max-w-3xl */
+  max-width: 48rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -120,12 +163,12 @@
   display: inline-block;
   padding: 1rem 2.5rem;
   border-radius: 0.5rem;
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
 }
 
 /* Seção Live Stats */
 .stats-grid {
-  max-width: 56rem; /* max-w-4xl */
+  max-width: 56rem;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -140,12 +183,11 @@
   gap: 1rem;
 }
 .stat-label {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.5rem;
 }
 .stat-value {
   font-weight: 700;
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 1.875rem;
   color: white;
 }
 
@@ -154,16 +196,15 @@
   padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  max-width: 42rem; /* max-w-2xl */
+  max-width: 42rem;
   margin: 0 auto;
   border-color: rgba(255, 215, 0, 0.3);
 }
 .mint-title {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 1.875rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 0.5rem;
-  font-family: 'Chakra Petch', sans-serif;
   color: var(--primary-glow);
 }
 .mint-subtitle {
@@ -253,18 +294,18 @@
 }
 .cost-details-row span:first-child {
   color: #9CA3AF;
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
 }
 #totalCost {
   font-weight: 700;
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.5rem;
   color: var(--primary-glow);
 }
 .mint-button {
   width: 100%;
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.25rem;
 }
 .wallet-status {
   text-align: center;
@@ -276,10 +317,9 @@
   white-space: nowrap;
 }
 
-
 /* Seção Why Us */
 .why-us-grid {
-  max-width: 64rem; /* max-w-5xl */
+  max-width: 64rem;
   margin: 0 auto;
   display: grid;
   gap: 2rem;
@@ -304,29 +344,27 @@
   color: var(--primary-glow);
 }
 .why-us-title {
-  font-family: 'Chakra Petch', sans-serif;
   font-weight: 700;
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: white;
 }
 .why-us-text {
   color: #9CA3AF;
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem;
 }
 
 /* Seção Roadmap */
 .roadmap-title {
-  font-size: 2.25rem; /* text-4xl */
+  font-size: 2.25rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 4rem;
-  font-family: 'Chakra Petch', sans-serif;
   color: white;
 }
 .roadmap-container {
   position: relative;
-  max-width: 48rem; /* max-w-3xl */
+  max-width: 48rem;
   margin: 0 auto;
   padding: 1rem;
 }
@@ -351,7 +389,7 @@
   background-color: var(--bg-dark);
   border: 4px solid var(--primary-glow); 
   top: 5px; 
-  left: -9px; /* Ajustado para centralizar */
+  left: -9px;
   z-index: 1;
   box-shadow: 0 0 12px var(--primary-glow);
   animation: pulse-glow 2.5s infinite ease-in-out;
@@ -362,9 +400,8 @@
   margin-bottom: 0.25rem;
 }
 .timeline-item-title {
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.25rem;
   font-weight: 700;
-  font-family: 'Chakra Petch', sans-serif;
 }
 .timeline-item-title-active { color: var(--primary-glow); }
 .timeline-item-title-planned { color: #9CA3AF; }
@@ -386,7 +423,7 @@
 .timeline-item-text {
   color: #9CA3AF;
   margin-top: 0.5rem;
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem;
 }
 
 /* Footer */
@@ -430,8 +467,13 @@
 
 /* Responsividade */
 @media (min-width: 768px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
   .navbar { margin: 0 auto; }
-  .hero-title { font-size: 4.5rem; } /* text-7xl */
+  .hero-title { font-size: 4.5rem; }
   .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .why-us-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
