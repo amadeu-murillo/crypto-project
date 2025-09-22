@@ -3,7 +3,6 @@
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
   max-width: 42rem;
   margin: 0 auto;
-  border: 1px solid var(--border-color);
 }
 
 .title {
@@ -62,9 +61,6 @@
   border: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   transition: opacity 0.3s;
 }
 
@@ -73,54 +69,45 @@
   cursor: not-allowed;
 }
 
-.amountControl label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #d1d5db;
-  margin-bottom: 0.5rem;
-}
-
 .amountInputWrapper {
   display: flex;
   align-items: center;
-}
-
-.inputNumberBtn {
-  background-color: rgba(255, 215, 0, 0.1);
-  border: 1px solid var(--border-color);
-  color: var(--primary-glow-color);
-  font-weight: 700;
-  font-size: 1.5rem;
-  padding: 0 1.25rem;
-  height: 3.5rem;
-}
-.inputNumberBtn:hover:not(:disabled) {
-  background-color: rgba(255, 215, 0, 0.2);
-}
-.inputNumberBtn:first-child {
-  border-radius: 0.5rem 0 0 0.5rem;
-  border-right: none;
-}
-.inputNumberBtn:last-child {
-  border-radius: 0 0.5rem 0.5rem 0;
-  border-left: none;
 }
 
 .tokenInput {
   width: 100%;
   text-align: center;
   background-color: rgba(10, 10, 20, 0.9);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
   height: 3.5rem;
   color: white;
   font-size: 1.5rem;
+  border-radius: 0.5rem;
 }
 .tokenInput:focus {
   outline: 2px solid var(--primary-glow-color);
   outline-offset: 2px;
   z-index: 10;
+}
+
+.presetButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.presetButtons button {
+  flex-grow: 1;
+  padding: 0.5rem;
+  background-color: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--primary-glow-color);
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.presetButtons button:hover {
+  background-color: rgba(255, 215, 0, 0.2);
 }
 
 .costDetails {
@@ -154,7 +141,10 @@
   width: 100%;
   padding: 1rem 1.5rem;
   font-size: 1.25rem;
-  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .walletStatus {

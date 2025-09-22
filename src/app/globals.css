@@ -550,3 +550,46 @@ a {
   }
 }
 
+/* ... (código anterior) ... */
+
+/* Estilos para as notificações Toast */
+.toast {
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  min-width: 250px;
+  max-width: 350px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: relative;
+}
+.toast.info {
+  background-color: #3b82f6;
+}
+.toast.success {
+  background-color: #22c55e;
+}
+.toast.error {
+  background-color: #ef4444;
+}
+/* ... (código anterior) ... */
+
+/* Estilos para o spinner (ícone de carregamento) */
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ... (código restante) ... */
