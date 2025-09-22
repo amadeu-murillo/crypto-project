@@ -1,0 +1,106 @@
+.gamesGrid {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .gamesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gamesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gameCard {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* Reset padding for full control */
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.gameImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+.gameCard:hover .gameImage {
+  transform: scale(1.05);
+}
+
+.comingSoonBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(10, 10, 20, 0.8);
+  color: var(--primary-glow-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
+}
+
+.cardContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.gameTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.gameDescription {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  flex-grow: 1;
+  margin-bottom: 1.5rem;
+}
+
+.payoutInfo {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.payoutLabel {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.payoutValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-glow-color);
+  text-shadow: 0 0 8px var(--primary-glow-color);
+}
+
+.payoutSecondary {
+  color: var(--secondary-glow-color);
+  text-shadow: 0 0 8px var(--secondary-glow-color);
+}

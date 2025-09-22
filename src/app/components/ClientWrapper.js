@@ -1,29 +1,30 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { DEV_WALLET_ADDRESS, RPC_ENDPOINT, TOKEN_MINT_ADDRESS } from '@/lib/constants';
+import { DEV_WALLET_ADDRESS, RPC_ENDPOINT } from '@/lib/constants';
 import { useMint } from '@/context/MintContext';
 import { useToast } from '@/hooks/useToast';
 import * as solanaWeb3 from '@solana/web3.js';
-import { getOrCreateAssociatedTokenAccount, transfer } from '@solana/spl-token';
 
 // Importação dos componentes da UI
 import Navbar from './Navbar';
 import Hero from './Hero';
 import LiveStats from './LiveStats';
 import MintSection from './MintSection';
+import GamesPreview from './GamesPreview'; // Importar o novo componente
 import WhyUs from './WhyUs';
 import Roadmap from './Roadmap';
 import Footer from './Footer';
 import ParticleCanvas from './ParticleCanvas';
+import Modal from './Modal'; // Importar o Modal
 
 const ClientWrapper = () => {
   const [solPrice, setSolPrice] = useState(null);
   const [userWallet, setUserWallet] = useState(null);
   const [isMinting, setIsMinting] = useState(false);
-  const { mintData, incrementMintData } = useMint();
+  const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', status: '' });
+  const { incrementMintData } = useMint();
   const { showToast } = useToast();
 
-  // Busca o preço do SOL da nossa API route interna
   useEffect(() => {
     const getSolPrice = async () => {
       try {
@@ -33,7 +34,7 @@ const ClientWrapper = () => {
         setSolPrice(data.solPrice);
       } catch (error) {
         console.error('Erro ao buscar preço do SOL:', error);
-        setSolPrice(null); // Define como null em caso de erro
+        setSolPrice(null);
         showToast('Erro ao buscar cotação do SOL.', { type: 'error' });
       }
     };
@@ -43,12 +44,12 @@ const ClientWrapper = () => {
   const connectWallet = async () => {
     if ('solana' in window && window.solana.isPhantom) {
       try {
-        const resp = await window.solana.connect();
+        const resp = await window.solana.connect({ onlyIfTrusted: false });
         setUserWallet(resp.publicKey.toString());
-        showToast('Carteira conectada com sucesso!', { type: 'success' });
+        showToast('Carteira conectada!', { type: 'success' });
       } catch (err) {
         console.error('Falha ao conectar carteira:', err);
-        showToast('Erro ao conectar a carteira.', { type: 'error' });
+        showToast('Conexão da carteira rejeitada.', { type: 'error' });
       }
     } else {
       window.open('https://phantom.app/', '_blank');
@@ -56,6 +57,7 @@ const ClientWrapper = () => {
   };
 
   const disconnectWallet = () => {
+    window.solana.disconnect();
     setUserWallet(null);
     showToast('Carteira desconectada.', { type: 'info' });
   };
@@ -67,15 +69,15 @@ const ClientWrapper = () => {
     }
 
     setIsMinting(true);
-    showToast('Processando sua transação...', { type: 'info' });
+    setModalState({ isOpen: true, title: 'Processando Pagamento', message: 'Por favor, aprove a transação de pagamento na sua carteira.', status: 'loading' });
 
     try {
-      const connection = new solanaWeb3.Connection(RPC_ENDPOINT);
+      const connection = new solanaWeb3.Connection(RPC_ENDPOINT, 'confirmed');
       const devPublicKey = new solanaWeb3.PublicKey(DEV_WALLET_ADDRESS);
       const userPublicKey = new solanaWeb3.PublicKey(userWallet);
-      const mintPublicKey = new solanaWeb3.PublicKey(TOKEN_MINT_ADDRESS);
 
-      // 1. Transação de pagamento para a carteira do dev
+      // 1. Criar e enviar a transação de pagamento em SOL para o dev
+      const { blockhash } = await connection.getLatestBlockhash('finalized');
       const paymentTransaction = new solanaWeb3.Transaction().add(
         solanaWeb3.SystemProgram.transfer({
           fromPubkey: userPublicKey,
@@ -83,72 +85,61 @@ const ClientWrapper = () => {
           lamports: Math.round(parseFloat(totalCostSOL) * solanaWeb3.LAMPORTS_PER_SOL),
         })
       );
-
-      // 2. Lógica para transferência de tokens
-      const fromTokenAccount = await getOrCreateAssociatedTokenAccount(
-        connection,
-        devPublicKey, // Payer para a criação da conta
-        mintPublicKey,
-        devPublicKey
-      );
-
-      const toTokenAccount = await getOrCreateAssociatedTokenAccount(
-        connection,
-        userPublicKey, // Payer para a criação da conta
-        mintPublicKey,
-        userPublicKey
-      );
-
-      const tokenTransaction = new solanaWeb3.Transaction().add(
-        transfer(
-          connection,
-          fromTokenAccount.address,
-          toTokenAccount.address,
-          devPublicKey,
-          tokenAmount * (10 ** 9) // Ajustar decimais do token
-        )
-      );
-
-      // Assinar e enviar transações
-      const { blockhash } = await connection.getLatestBlockhash('finalized');
       paymentTransaction.recentBlockhash = blockhash;
       paymentTransaction.feePayer = userPublicKey;
-      tokenTransaction.recentBlockhash = blockhash;
-      tokenTransaction.feePayer = userPublicKey;
 
+      const signedPaymentTx = await window.solana.signTransaction(paymentTransaction);
+      const paymentSignature = await connection.sendRawTransaction(signedPaymentTx.serialize());
+      await connection.confirmTransaction({ signature: paymentSignature, blockhash, lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight }, 'confirmed');
+      
+      setModalState({ isOpen: true, title: 'Enviando Tokens', message: 'Pagamento confirmado. Agora estamos a enviar os seus tokens $SC.', status: 'loading' });
 
-      const { signature } = await window.solana.signAndSendTransaction(paymentTransaction);
-      await connection.confirmTransaction(signature, 'confirmed');
+      // 2. Chamar a nossa API para que o backend envie os tokens $SC
+      const apiResponse = await fetch('/api/mint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userWallet, tokenAmount, paymentSignature }),
+      });
 
-      // Enviar a transação do token (pode ser necessário que o dev assine)
-      // Esta parte pode precisar de um backend para assinar a transação do token
-      // Para este exemplo, estamos assumindo que a carteira conectada (usuário) paga as taxas
-      const tokenSignature = await window.solana.signAndSendTransaction(tokenTransaction);
-      await connection.confirmTransaction(tokenSignature, 'confirmed');
+      const data = await apiResponse.json();
 
+      if (!apiResponse.ok) {
+        throw new Error(data.error || 'Falha na API de mint');
+      }
 
-      showToast('Mint realizado com sucesso!', {
-        type: 'success',
-        message: `Transação: ${signature.substring(0, 10)}...`
+      await connection.confirmTransaction({ signature: data.tokenSignature, blockhash, lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight }, 'confirmed');
+      
+      setModalState({ 
+        isOpen: true, 
+        title: 'Sucesso!', 
+        message: `${tokenAmount.toLocaleString('pt-BR')} $SC foram enviados para a sua carteira.`, 
+        status: 'success',
+        txSignature: data.tokenSignature,
       });
 
       incrementMintData(tokenAmount);
 
     } catch (error) {
       console.error('Erro na transação:', error);
-      const userRejected = error.code === 4001;
+      const userRejected = error.code === 4001 || (error.message && error.message.includes("User rejected the request"));
       const message = userRejected
-        ? 'A transação foi rejeitada por você.'
-        : 'A transação falhou. Verifique seu saldo.';
-      showToast(message, { type: 'error' });
+        ? 'A transação foi rejeitada por si.'
+        : 'A transação falhou. Verifique o seu saldo e tente novamente.';
+      
+      setModalState({ isOpen: true, title: 'Erro na Transação', message, status: 'error' });
     } finally {
       setIsMinting(false);
     }
   };
 
+  const closeModal = () => {
+    setModalState({ isOpen: false, title: '', message: '', status: '' });
+  }
+
   return (
     <>
       <ParticleCanvas />
+      <Modal modalState={modalState} closeModal={closeModal} />
 
       <div className='relative z-10'>
         <Navbar
@@ -165,6 +156,7 @@ const ClientWrapper = () => {
             userWallet={userWallet}
             isMinting={isMinting}
           />
+          <GamesPreview /> {/* Adicionar o novo componente aqui */}
           <WhyUs />
           <Roadmap />
         </main>
@@ -175,3 +167,4 @@ const ClientWrapper = () => {
 };
 
 export default ClientWrapper;
+
