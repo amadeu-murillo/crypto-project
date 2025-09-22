@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 const MintContext = createContext();
 
@@ -21,16 +21,6 @@ export const MintProvider = ({ children }) => {
       participants: prev.participants + 1
     }));
   }, []);
-  
-  // Simula o mint de outros usuários para dar dinamismo à página
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomAmount = Math.floor(Math.random() * 500) + 1;
-      incrementMintData(randomAmount);
-    }, 5000); // A cada 5 segundos
-
-    return () => clearInterval(interval);
-  }, [incrementMintData]);
 
   return (
     <MintContext.Provider value={{ mintData, incrementMintData }}>
